@@ -1,0 +1,15 @@
+name: censorx
+channels:
+  - pytorch
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - flask
+  - flask-cors
+  - gunicorn
+  - transformers
+  - scikit-learn
+  - pandas
+  - numpy
+  - tensorflow

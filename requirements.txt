@@ -1,0 +1,17 @@
+torch
+flask
+flask-cors
+gunicorn
+transformers
+scikit-learn
+pandas
+numpy
+tensorflow
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+google.cloud
+tqdm
+python-dotenv
+google-cloud-storage
