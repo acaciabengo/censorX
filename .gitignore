@@ -1,6 +1,6 @@
 /venv
 auth.json
-models/*
+/models/*
 venv/
 __pycache__/
 *.pyc
