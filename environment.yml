@@ -1,7 +1,6 @@
 name: censorx
 channels:
   - conda-forge
-  - pytorch
   - defaults
 dependencies:
   - python=3.10
@@ -16,15 +15,16 @@ dependencies:
   - tqdm
   - python-dotenv
   
-  # PyTorch CPU (install via conda for better compatibility)
-  - pytorch=2.5.1
-  - torchvision=0.20.1
-  - cpuonly
-  
   - pip:
       - sympy         
       - safetensors
-      - torchao==0.6.1
+      
+      # PyTorch - install via pip for latest versions
+      # Note: This will install CUDA dependencies even for CPU-only usage
+      # Compatible with torchao 0.15.0 and transformers 4.57.3
+      - torch>=2.9.0
+      - torchvision>=0.24.0
+      - torchao>=0.15.0
       
       # Transformers & ML Tools
       - transformers>=4.40.0

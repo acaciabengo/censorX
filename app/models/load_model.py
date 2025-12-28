@@ -56,10 +56,7 @@ class ModelLoader:
 
         if quantize:
             print("Quantizing text model with torchao...")
-            model = quantize_(
-                model,
-                int8_weight_only,
-            )
+            model = quantize_(model, int8_weight_only())
             # compile for speed
             model = torch.compile(model, mode="max-autotune")
 
@@ -86,7 +83,7 @@ class ModelLoader:
             print("Quantizing image model with torchao...")
             model = quantize_(
                 model,
-                int8_weight_only,
+                int8_weight_only(),
             )
             # compile for speed
             model = torch.compile(model, mode="max-autotune")
