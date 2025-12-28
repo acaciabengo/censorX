@@ -31,10 +31,15 @@ def predict_text():
     inputs = {k: v.to(device) for k, v in inputs.items()}
     with torch.no_grad():
         logits = model(**inputs).logits
-        probabilities = logits.softmax(
-            dim=-1
-        ).tolist()  # shape: (batch_size, num_classes)
-    return jsonify({"result": probabilities}), 200
+        probs = logits.softmax(dim=-1).tolist()  # shape: (batch_size, num_classes)
+    # Map class indices to names
+    label_names = [labels[i] for i in range(len(labels))]
+    results = [dict(zip(label_names, p)) for p in probs]
+    # Return a single dict if only one input, else a list
+    if len(results) == 1:
+        return jsonify(results[0]), 200
+    else:
+        return jsonify(results), 200
 
 
 @api_blueprint.route("/image", methods=["POST"])
