@@ -44,16 +44,35 @@ def predict_text():
 
 @api_blueprint.route("/image", methods=["POST"])
 def predict_image():
+    import requests
+
     labels = {"drawings": 0, "hentai": 1, "neutral": 2, "porn": 3, "sexy": 4}
     id_to_label = {v: k for k, v in labels.items()}
 
-    if "file" not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    file = request.files["file"]
-    if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
+    image = None
+
+    # Try file upload first
+    if "file" in request.files and request.files["file"].filename != "":
+        file = request.files["file"]
+        try:
+            image = Image.open(file.stream).convert("RGB")
+        except Exception as e:
+            return jsonify({"error": f"Failed to read uploaded image: {str(e)}"}), 400
+    else:
+        # Try URL in JSON
+        data = request.json
+        url = data.get("url") if data else None
+        if url:
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                image = Image.open(io.BytesIO(response.content)).convert("RGB")
+            except Exception as e:
+                return jsonify({"error": f"Failed to fetch image from URL: {str(e)}"}), 400
+        else:
+            return jsonify({"error": "No file or URL provided"}), 400
+
     try:
-        image = Image.open(file.stream).convert("RGB")
         model = current_app.config["IMAGE_MODEL"]
         processor = current_app.config["IMAGE_TRANSFORM"]
 
@@ -63,10 +82,13 @@ def predict_image():
 
         with torch.no_grad():
             outputs = model(**inputs)
-            probabilities = outputs.logits.softmax(
-                dim=-1
-            ).tolist()  # shape: (batch_size, num_classes)
-        return jsonify({"result": probabilities}), 200
+            probs = outputs.logits.softmax(dim=-1).tolist()
+        label_names = [id_to_label[i] for i in range(len(id_to_label))]
+        results = [dict(zip(label_names, p)) for p in probs]
+        if len(results) == 1:
+            return jsonify(results[0]), 200
+        else:
+            return jsonify(results), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
