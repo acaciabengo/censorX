@@ -1,18 +1,21 @@
+# environment.yml
 name: censorx
 channels:
   - pytorch
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - python=3.10
   - flask
   - flask-cors
   - gunicorn
-  - transformers
   - scikit-learn
   - pandas
   - numpy
   - tensorflow
   - pytorch
   - torchvision
-  - torchao
+  - pip
+  - pip:
+      - transformers
+      - torchao
