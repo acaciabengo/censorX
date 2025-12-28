@@ -8,7 +8,6 @@ from transformers import (
     ViTImageProcessor,
 )
 
-
 from torchao.quantization import quantize_, int8_weight_only
 
 TEXT_MODEL_NAME = "censorx_bert.pth"

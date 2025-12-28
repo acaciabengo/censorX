@@ -1,11 +1,12 @@
 name: censorx
 channels:
   - conda-forge
+  - pytorch
   - defaults
 dependencies:
   - python=3.10
   - pip
-  # Core Web and Data Science (Conda handles these more efficiently)
+  # Core Web and Data Science
   - flask
   - flask-cors
   - gunicorn
@@ -14,13 +15,15 @@ dependencies:
   - numpy=1.26.4
   - tqdm
   - python-dotenv
+  
+  # PyTorch CPU (install via conda for better compatibility)
+  - pytorch=2.5.1
+  - torchvision=0.20.1
+  - cpuonly
+  
   - pip:
       - sympy         
       - safetensors
-      # PyTorch CPU 
-      - --extra-index-url https://download.pytorch.org/whl/cpu
-      - torch==2.5.1
-      - torchvision==0.20.1
       - torchao==0.6.1
       
       # Transformers & ML Tools
@@ -29,7 +32,7 @@ dependencies:
       - torchserve
       - torch-model-archiver
       
-      # Google Cloud & gRPC (Grouped to ensure compatibility)
+      # Google Cloud & gRPC
       - protobuf>=4.25.3
       - grpcio>=1.50.0
       - grpcio-status>=1.50.0
