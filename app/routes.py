@@ -30,9 +30,11 @@ def predict_text():
     device = next(model.parameters()).device
     inputs = {k: v.to(device) for k, v in inputs.items()}
     with torch.no_grad():
-        probabilities = model(**inputs).logits.softmax(dim=-1)[:, 1].tolist()
-        labels_probabilities = {labels[i]: prob for i, prob in enumerate(probabilities)}
-    return jsonify({"result": labels_probabilities}), 200
+        logits = model(**inputs).logits
+        probabilities = logits.softmax(
+            dim=-1
+        ).tolist()  # shape: (batch_size, num_classes)
+    return jsonify({"result": probabilities}), 200
 
 
 @api_blueprint.route("/image", methods=["POST"])
@@ -56,13 +58,10 @@ def predict_image():
 
         with torch.no_grad():
             outputs = model(**inputs)
-            probabilities = outputs.logits.softmax(dim=-1)[:, 1].tolist()
-            # convert to labels
-            labels_probabilities = {
-                id_to_label[i]: prob for i, prob in enumerate(probabilities)
-            }
-
-        return jsonify({"result": labels_probabilities}), 200
+            probabilities = outputs.logits.softmax(
+                dim=-1
+            ).tolist()  # shape: (batch_size, num_classes)
+        return jsonify({"result": probabilities}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
