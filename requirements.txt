@@ -18,3 +18,4 @@ google-cloud-storage
 torchserve
 torch-model-archiver
 transformers
+torchao

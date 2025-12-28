@@ -13,3 +13,6 @@ dependencies:
   - pandas
   - numpy
   - tensorflow
+  - pytorch
+  - torchvision
+  - torchao
